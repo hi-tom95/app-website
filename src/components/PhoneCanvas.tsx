@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 
-const FRAME_COUNT = 256
-const FRAME_W     = 603
-const FRAME_H     = 1310
-const LERP        = 0.12
+const FRAME_COUNT  = 244          // 256 total minus 12 static opening frames
+const FRAME_OFFSET = 12           // start at phone_012.webp — first 12 frames were static
+const FRAME_W      = 603
+const FRAME_H      = 1310
+const LERP         = 0.12
 
-// On phones (≤430px), load every other frame to halve RAM usage (128 instead of 256 images)
+// On phones (≤430px), load every other frame to halve RAM usage (122 instead of 244 images)
 const isMobileDevice = typeof window !== 'undefined' && window.innerWidth <= 430
 const FRAME_STEP    = isMobileDevice ? 2 : 1
 const LOGICAL_COUNT = Math.ceil(FRAME_COUNT / FRAME_STEP)
@@ -24,7 +25,7 @@ export default function PhoneCanvas({ progressRef }: Props) {
   useEffect(() => {
     let count = 0
     imagesRef.current = Array.from({ length: LOGICAL_COUNT }, (_, i) => {
-      const frameNum = i * FRAME_STEP
+      const frameNum = i * FRAME_STEP + FRAME_OFFSET
       const img = new Image()
       img.onload = () => {
         if (i === 0) {

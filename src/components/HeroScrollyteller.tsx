@@ -169,25 +169,23 @@ export default function HeroScrollyteller() {
     if (!section || !pinned || !sky || !midground || !mockup) return
 
     const isMobile = window.innerWidth <= 430
-    // Mobile Phase 2 is 4× longer so cards have more reading time
-    const mobilePhase2Extra = isMobile ? window.innerHeight * 4 : 0
+    const mobilePhase2Extra = isMobile ? window.innerHeight * 2 : 0
 
-    // Extend the section height on mobile — more height = more scroll distance for the phone animation
-    if (isMobile) section.style.height = '4000vh'
+    if (isMobile) section.style.height = '3000vh'
 
     const PHASE1_PX = window.innerHeight * 2
     const PHASE2_PX = window.innerHeight * 2
 
-    // ── Pin: hero stays fixed (1600 vh on mobile, 1200 vh on desktop) ────
+    // ── Pin: hero stays fixed (2990 vh on mobile, 1200 vh on desktop) ────
     const pinTrigger = ScrollTrigger.create({
       trigger: section,
       start:   'top top',
-      end:     isMobile ? '+=3900%' : '+=1200%',
+      end:     isMobile ? '+=2990%' : '+=1200%',
       pin:     pinned,
       onUpdate: (self) => {
         // Person animation spans Phase 1 (200 vh). Scale so progress hits 1 exactly at Phase 1 end.
-        // mobile phaseScale = pin_vh / phase1_vh = 3900 / 200 = 19.5 → 20
-        const phaseScale = isMobile ? 20 : 6
+        // mobile phaseScale = pin_vh / phase1_vh = 2990 / 200 = 14.95 → 15
+        const phaseScale = isMobile ? 15 : 6
         targetProgressRef.current = Math.min(self.progress * phaseScale, 1)
       },
     })
@@ -297,8 +295,8 @@ export default function HeroScrollyteller() {
     const getMobileCardStack = (heights: number[]) => {
       const cx  = window.innerWidth / 2
       const gap = 12
-      // 40px gap below headline (headline bottom ≈ 25vh)
-      let y = window.innerHeight * 0.25 + 40
+      // 16px gap below headline (headline bottom ≈ 25vh)
+      let y = window.innerHeight * 0.25 + 16
       return heights.map((h) => {
         const pos = { x: cx, y: y + h / 2 }
         y += h + gap
@@ -431,9 +429,9 @@ export default function HeroScrollyteller() {
     // Desktop stays at the original 1+8+2 = 11 unit layout — completely unchanged.
     // Mobile: step 2 is longer (more scroll for the phone sequence); step 1 + step 3 are kept short.
     const step1Dur = isMobile ? 0.6 : 1   // mobile: shorter scroll window for this transition
-    const step2Dur = isMobile ? 12 : 8   // mobile: ~2400 vh of scroll for step 2
-    const step3Dur = isMobile ? 1 : 2    // mobile: shorter footer transition
-    const step3Pos = step1Dur + step2Dur  // mobile: 13 | desktop: 9
+    const step2Dur = isMobile ? 7  : 8   // mobile: reduced scroll distance for step 2
+    const step3Dur = isMobile ? 0.5 : 2  // mobile: quick footer slide
+    const step3Pos = step1Dur + step2Dur  // mobile: 7.6 | desktop: 9
 
     // Step 1 — headline + card content cross-fade; desktop: phone slides up (duration: step1Dur)
     phase3TL.to(slideState, {
@@ -507,9 +505,9 @@ export default function HeroScrollyteller() {
         if (isMobile) {
           const p = frameState.p
 
-          // 0–12 %: hold — cards with P3 content fully visible, user can read
-          // 12–26 %: cards slide down and fade out
-          const cardFadeRaw   = Math.min(Math.max((p - 0.12) / 0.14, 0), 1)
+          // 0–5 %: hold — cards with P3 content visible, user can read
+          // 5–17 %: cards slide down and fade out
+          const cardFadeRaw   = Math.min(Math.max((p - 0.05) / 0.12, 0), 1)
           const cardFadeEased = 1 - Math.pow(1 - cardFadeRaw, 4)
           const mobileBasePos = getMobileCardStack(p3Heights)
           cards.forEach((card, i) => {
@@ -522,18 +520,18 @@ export default function HeroScrollyteller() {
               `translate(calc(${Math.round(tp.x)}px - 50%), calc(${Math.round(tp.y + slideY)}px - 50%)) scale(1)`
           })
 
-          // Drop card layer BEFORE phone starts rising so phone appears in front
+          // Drop card layer at start of card fade so phone appears in front when it enters at 7%
           if (cardLayerRef.current) {
-            cardLayerRef.current.style.zIndex = p >= 0.12 ? '15' : '25'
+            cardLayerRef.current.style.zIndex = p >= 0.05 ? '15' : '25'
           }
 
-          // Phone slides up 14–26 % — starts while cards still fading
-          const phoneFlyRaw   = Math.min(Math.max((p - 0.14) / 0.12, 0), 1)
+          // Phone slides up 7–17 % — starts while cards still fading
+          const phoneFlyRaw   = Math.min(Math.max((p - 0.07) / 0.10, 0), 1)
           const phoneFlyEased = 1 - Math.pow(1 - phoneFlyRaw, 4)
           mockup.style.transform = `translateY(${Math.round((1 - phoneFlyEased) * mockupInitialY)}px)`
 
-          // Frame scrub 26–100 % — starts immediately after phone finishes flying in
-          phoneProgressRef.current = Math.max(0, (p - 0.26) / 0.74)
+          // Frame scrub 17–100 % — starts immediately after phone finishes flying in
+          phoneProgressRef.current = Math.max(0, (p - 0.17) / 0.83)
         } else {
           // Desktop: full-length frame scrub, re-lock card positions every tick
           phoneProgressRef.current = frameState.p
@@ -581,7 +579,7 @@ export default function HeroScrollyteller() {
       trigger:   section,
       start:     () => section.offsetTop + PHASE1_PX + PHASE2_PX + mobilePhase2Extra,
       end:       'bottom bottom',
-      scrub:     isMobile ? 5 : 1,
+      scrub:     isMobile ? 2 : 1,
       animation: phase3TL,
       onLeaveBack() {
         phase3SlideP = 0
