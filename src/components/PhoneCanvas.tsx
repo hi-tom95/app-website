@@ -6,9 +6,8 @@ const FRAME_W     = 603
 const FRAME_H     = 1310
 const LERP        = 0.12
 
-// On mobile, load every other frame to halve RAM usage (128 instead of 256 images)
-const isMobileDevice = typeof window !== 'undefined'
-  && (window.innerWidth <= 768 || navigator.maxTouchPoints > 1)
+// On phones (≤430px), load every other frame to halve RAM usage (128 instead of 256 images)
+const isMobileDevice = typeof window !== 'undefined' && window.innerWidth <= 430
 const FRAME_STEP    = isMobileDevice ? 2 : 1
 const LOGICAL_COUNT = Math.ceil(FRAME_COUNT / FRAME_STEP)
 

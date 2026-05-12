@@ -168,7 +168,7 @@ export default function HeroScrollyteller() {
     const mockup    = mockupRef.current
     if (!section || !pinned || !sky || !midground || !mockup) return
 
-    const isMobile = window.innerWidth <= 768
+    const isMobile = window.innerWidth <= 430
     // Mobile Phase 2 is 4× longer so cards have more reading time
     const mobilePhase2Extra = isMobile ? window.innerHeight * 4 : 0
 

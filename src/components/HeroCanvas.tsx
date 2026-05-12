@@ -5,8 +5,7 @@ const FRAME_W     = 1920
 const FRAME_H     = 1080
 const LERP        = 0.12
 
-const isMobileDevice = typeof window !== 'undefined'
-  && (window.innerWidth <= 768 || navigator.maxTouchPoints > 1)
+const isMobileDevice = typeof window !== 'undefined' && window.innerWidth <= 430
 const FRAME_STEP    = isMobileDevice ? 2 : 1
 const LOGICAL_COUNT = Math.ceil(FRAME_COUNT / FRAME_STEP)
 
