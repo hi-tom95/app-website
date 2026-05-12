@@ -168,7 +168,7 @@ export default function HeroScrollyteller() {
     const mockup    = mockupRef.current
     if (!section || !pinned || !sky || !midground || !mockup) return
 
-    const isMobile = window.innerWidth <= 430
+    const isMobile = window.innerWidth <= 768
     const mobilePhase2Extra = isMobile ? window.innerHeight * 2 : 0
 
     if (isMobile) section.style.height = '3000vh'
@@ -421,8 +421,14 @@ export default function HeroScrollyteller() {
     const p3ContentRefs = [card1P3Ref.current, card2P3Ref.current, card3P3Ref.current, card4P3Ref.current]
 
     // Measure natural card heights: P2 sets height during orbit, P3 sets height when docked
-    const p2Heights = cards.map(card => card?.offsetHeight ?? 0)
-    const p3Heights = p3ContentRefs.map(ref => ref?.offsetHeight ?? 0)
+    // Measure card heights. Re-measure after fonts load to avoid wrong heights
+    // when the web font (Inter) hasn't swapped in yet on first page load.
+    let p2Heights = cards.map(card => card?.offsetHeight ?? 0)
+    let p3Heights = p3ContentRefs.map(ref => ref?.offsetHeight ?? 0)
+    document.fonts.ready.then(() => {
+      p2Heights = cards.map(card => card?.offsetHeight ?? 0)
+      p3Heights = p3ContentRefs.map(ref => ref?.offsetHeight ?? 0)
+    })
 
     const FOOTER_YOFFSET = Math.max(0, Math.round(0.25 * window.innerHeight - 210))
 
@@ -703,7 +709,7 @@ export default function HeroScrollyteller() {
                 <MapPin size={16} color="white" weight="fill" />
                 <p className="text-white text-[14px] font-medium leading-none">Your Location, Live</p>
               </div>
-              <p className="text-white/70 text-[14px] leading-[1.3]">Open Journey. The app senses exactly where you are — down to the building.</p>
+              <p className="text-white/70 text-[14px] leading-[1.3]">Open walkboy. The app senses exactly where you are — down to the building.</p>
             </div>
           </div>
 
@@ -763,7 +769,7 @@ export default function HeroScrollyteller() {
                 <WaveTriangle size={16} color="white" />
                 <p className="text-white text-[14px] font-medium leading-none">Always Playing</p>
               </div>
-              <p className="text-white/70 text-[14px] leading-[1.3]">Journey runs quietly in the background. A new episode begins the moment you step into history.</p>
+              <p className="text-white/70 text-[14px] leading-[1.3]">walkboy runs quietly in the background. A new episode begins the moment you step into history.</p>
             </div>
           </div>
 
@@ -790,17 +796,17 @@ export default function HeroScrollyteller() {
         style={{ opacity: 0 }}
         aria-hidden={false}
       >
-        <h2>How Journey Works — Your Location-Aware Audio Guide</h2>
+        <h2>How walkboy Works — Your Location-Aware Audio Guide</h2>
         <p>
-          Journey is a location-aware audio guide app that delivers local history audio stories
-          triggered by your precise GPS position. As you walk through the city, Journey acts as
+          walkboy is a location-aware audio guide app that delivers local history audio stories
+          triggered by your precise GPS position. As you walk through the city, walkboy acts as
           your personal mobile tour guide — sensing exactly where you are and playing immersive
           location-aware storytelling content about the history of your exact spot.
         </p>
         <ol>
-          <li>Open Journey and allow location access</li>
+          <li>Open walkboy and allow location access</li>
           <li>Walk through the city with headphones on</li>
-          <li>Journey's location-aware storytelling engine detects your precise GPS position</li>
+          <li>walkboy's location-aware storytelling engine detects your precise GPS position</li>
           <li>Your audio guide begins, telling local history audio stories about the exact spot you're standing</li>
           <li>Discover hidden history through your mobile tour guide — hands-free, on-demand</li>
         </ol>

@@ -8,7 +8,7 @@ const FRAME_H      = 1310
 const LERP         = 0.12
 
 // On phones (≤430px), load every other frame to halve RAM usage (122 instead of 244 images)
-const isMobileDevice = typeof window !== 'undefined' && window.innerWidth <= 430
+const isMobileDevice = typeof window !== 'undefined' && window.innerWidth <= 768
 const FRAME_STEP    = isMobileDevice ? 2 : 1
 const LOGICAL_COUNT = Math.ceil(FRAME_COUNT / FRAME_STEP)
 

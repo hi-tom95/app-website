@@ -5,7 +5,7 @@ const FRAME_W     = 1920
 const FRAME_H     = 1080
 const LERP        = 0.12
 
-const isMobileDevice = typeof window !== 'undefined' && window.innerWidth <= 430
+const isMobileDevice = typeof window !== 'undefined' && window.innerWidth <= 768
 const FRAME_STEP    = isMobileDevice ? 2 : 1
 const LOGICAL_COUNT = Math.ceil(FRAME_COUNT / FRAME_STEP)
 
@@ -25,7 +25,14 @@ export default function HeroCanvas({ progressRef }: Props) {
     imagesRef.current = Array.from({ length: LOGICAL_COUNT }, (_, i) => {
       const frameNum = i * FRAME_STEP + 1
       const img = new Image()
-      img.onload = () => { if (++count === LOGICAL_COUNT) loadedRef.current = true }
+      img.onload = () => {
+        if (i === 0) {
+          const canvas = canvasRef.current
+          const ctx = canvas?.getContext('2d')
+          if (canvas && ctx) ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        }
+        if (++count === LOGICAL_COUNT) loadedRef.current = true
+      }
       img.src = `/frames/frame_${String(frameNum).padStart(3, '0')}.webp`
       return img
     })
