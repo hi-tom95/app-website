@@ -69,6 +69,7 @@ export default function HeroScrollyteller() {
   const phoneProgressRef   = useRef<number>(0)
   const headline1Ref       = useRef<HTMLHeadingElement>(null)
   const headline2Ref       = useRef<HTMLHeadingElement>(null)
+  const headline3Ref       = useRef<HTMLHeadingElement>(null)
   const card1P2Ref         = useRef<HTMLDivElement>(null)
   const card2P2Ref         = useRef<HTMLDivElement>(null)
   const card3P2Ref         = useRef<HTMLDivElement>(null)
@@ -553,13 +554,18 @@ export default function HeroScrollyteller() {
       },
     }, step1Dur)
 
-    // Step 3 — footer slides in, phone shifts up
+    // Step 3 — footer slides in, phone shifts up, headline cross-fades to "walkboy"
     phase3TL.to(footerState, {
       p: 1, duration: step3Dur, ease: 'none',
       onUpdate() {
         phase3SlideP = 1
         const footerEased = 1 - Math.pow(1 - footerState.p, 3)
         const yOffset     = Math.round(footerEased * FOOTER_YOFFSET)
+
+        // Headline cross-fade: "Walk. Arrive. Listen." → "walkboy"
+        const headlineEased = 1 - Math.pow(1 - footerState.p, isMobile ? 4 : 3)
+        if (headline2Ref.current) headline2Ref.current.style.opacity = (1 - headlineEased).toFixed(3)
+        if (headline3Ref.current) headline3Ref.current.style.opacity = headlineEased.toFixed(3)
 
         if (footerRef.current) {
           footerRef.current.style.transform = `translateY(${Math.round((1 - footerEased) * 100)}%)`
@@ -591,6 +597,7 @@ export default function HeroScrollyteller() {
         phase3SlideP = 0
         if (headline1Ref.current) headline1Ref.current.style.opacity = '1'
         if (headline2Ref.current) headline2Ref.current.style.opacity = '0'
+        if (headline3Ref.current) headline3Ref.current.style.opacity = '0'
         p2ContentRefs.forEach(el => { if (el) el.style.opacity = '1' })
         p3ContentRefs.forEach(el => { if (el) el.style.opacity = '0' })
         cards.forEach(card => {
@@ -677,6 +684,13 @@ export default function HeroScrollyteller() {
                          tracking-[-0.04em] text-[38px] sm:text-[44px] md:text-[48px] max-w-xl opacity-0"
             >
               Walk. Arrive. Listen.
+            </h1>
+            <h1
+              ref={headline3Ref}
+              className="absolute top-0 left-0 right-0 text-center text-[#0E0E0E] font-medium leading-[1.1]
+                         tracking-[-0.04em] text-[38px] sm:text-[44px] md:text-[48px] max-w-xl opacity-0"
+            >
+              walkboy
             </h1>
           </div>
         </div>
