@@ -519,6 +519,7 @@ export default function HeroScrollyteller() {
           const orbitAngles = [-Math.PI * 2/3, -Math.PI * 13/36, -Math.PI/18, Math.PI/6]
           cards.forEach((card, i) => {
             if (!card) return
+            card.style.opacity = '1'
             const orbitX = orbitCX + Math.cos(orbitAngles[i]) * 360
             const orbitY = orbitCY + Math.sin(orbitAngles[i]) * 240
             const tp = targets[i]
@@ -573,6 +574,7 @@ export default function HeroScrollyteller() {
           const targets = getPhase3Targets()
           cards.forEach((card, i) => {
             if (!card) return
+            card.style.opacity = '1'
             card.style.height = `${p3Heights[i]}px`
             const tp = targets[i]
             card.style.transform =
@@ -606,6 +608,7 @@ export default function HeroScrollyteller() {
           const targets = getPhase3Targets(yOffset)
           cards.forEach((card, i) => {
             if (!card) return
+            card.style.opacity = '1'
             const tp = targets[i]
             card.style.transform =
               `translate(calc(${Math.round(tp.x)}px - 50%), calc(${Math.round(tp.y)}px - 50%)) scale(1)`
@@ -650,12 +653,17 @@ export default function HeroScrollyteller() {
     }) // closes gsap.context
     }  // closes init()
 
+    const runInit = () => {
+      init()
+      requestAnimationFrame(() => window.dispatchEvent(new Event('scroll')))
+    }
+
     const handleResize = () => {
       clearTimeout(resizeTimer)
-      resizeTimer = setTimeout(init, 250)
+      resizeTimer = setTimeout(runInit, 250)
     }
     window.addEventListener('resize', handleResize)
-    init()
+    runInit()
 
     return () => {
       clearTimeout(resizeTimer)
@@ -673,11 +681,13 @@ export default function HeroScrollyteller() {
         {/* Layer 0 — gradient sky */}
         <div
           ref={skyRef}
-          className={`absolute top-0 left-0 right-0 z-0 ${GRADIENT_MODE === 'C' ? 'h-[300vh]' : 'h-[200vh]'}`}
+          className={`absolute top-0 left-0 right-0 z-0 ${GRADIENT_MODE === 'C' ? 'h-[400vh]' : 'h-[200vh]'}`}
           style={{
             background: GRADIENT_MODE === 'C'
-              // Mode C: solid gray top third → transition → solid orange bottom third
-              ? `linear-gradient(to bottom, ${SKY_TOP} 33.33%, ${SKY_BOTTOM} 66.67%)`
+              // Mode C: 400vh tall — gray 0–100vh, transition 100–200vh, orange 200–400vh.
+              // translateY target is −200vh so viewport always sees solid orange.
+              // Extra 200vh of orange below provides a buffer against any sub-pixel mismatch.
+              ? `linear-gradient(to bottom, ${SKY_TOP} 25%, ${SKY_BOTTOM} 50%)`
               : `linear-gradient(to bottom, ${SKY_TOP} 0%, ${SKY_TOP} 50%, #FEAA8C 75%, ${SKY_BOTTOM} 100%)`
           }}
         />
