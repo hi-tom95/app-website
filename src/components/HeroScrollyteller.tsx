@@ -162,6 +162,32 @@ export default function HeroScrollyteller() {
 
   // ── GSAP: pin + gradient + blur + orbit cards + Phase 3 ─────────────────
   useEffect(() => {
+    let ctx: gsap.Context | null = null
+    let resizeTimer: ReturnType<typeof setTimeout>
+
+    const resetStyles = () => {
+      const allCards = [card1Ref, card2Ref, card3Ref, card4Ref].map(r => r.current)
+      const allP2    = [card1P2Ref, card2P2Ref, card3P2Ref, card4P2Ref].map(r => r.current)
+      const allP3    = [card1P3Ref, card2P3Ref, card3P3Ref, card4P3Ref].map(r => r.current)
+      allCards.forEach(c => { if (c) { c.style.transform = ''; c.style.opacity = ''; c.style.height = '' } })
+      allP2.forEach(el => { if (el) el.style.opacity = '' })
+      allP3.forEach(el => { if (el) el.style.opacity = '' })
+      if (mockupRef.current)          { mockupRef.current.style.transform            = '' }
+      if (personContainerRef.current) { personContainerRef.current.style.opacity     = ''; personContainerRef.current.style.transform = '' }
+      if (footerRef.current)          { footerRef.current.style.transform            = 'translateY(100%)' }
+      if (headline1Ref.current)       { headline1Ref.current.style.opacity           = '' }
+      if (headline2Ref.current)       { headline2Ref.current.style.opacity           = '' }
+      if (headline3Ref.current)       { headline3Ref.current.style.opacity           = '' }
+      if (cardLayerRef.current)       { cardLayerRef.current.style.zIndex            = '' }
+      if (skyRef.current)             { skyRef.current.style.transform               = '' }
+      if (midgroundRef.current)       { midgroundRef.current.style.filter            = '' }
+      if (sectionRef.current)         { sectionRef.current.style.height              = '' }
+    }
+
+    const init = () => {
+      if (ctx) { ctx.revert(); ctx = null }
+      resetStyles()
+
     const section   = sectionRef.current
     const pinned    = pinnedRef.current
     const sky       = skyRef.current
@@ -177,8 +203,10 @@ export default function HeroScrollyteller() {
     const PHASE1_PX = window.innerHeight * 2
     const PHASE2_PX = window.innerHeight * 2
 
+    ctx = gsap.context(() => {
+
     // ── Pin: hero stays fixed (2990 vh on mobile, 1200 vh on desktop) ────
-    const pinTrigger = ScrollTrigger.create({
+    ScrollTrigger.create({
       trigger: section,
       start:   'top top',
       end:     isMobile ? '+=2990%' : '+=1200%',
@@ -313,7 +341,7 @@ export default function HeroScrollyteller() {
 
     const orbitState = { progress: 0 }
 
-    const orbitTween = gsap.to(orbitState, {
+    gsap.to(orbitState, {
       progress: 1,
       ease:     'none',
       scrollTrigger: {
@@ -587,7 +615,7 @@ export default function HeroScrollyteller() {
       },
     }, step3Pos)
 
-    const phase3Trigger = ScrollTrigger.create({
+    ScrollTrigger.create({
       trigger:   section,
       start:     () => section.offsetTop + PHASE1_PX + PHASE2_PX + mobilePhase2Extra,
       end:       'bottom bottom',
@@ -619,12 +647,21 @@ export default function HeroScrollyteller() {
     })
 
     ScrollTrigger.refresh()
+    }) // closes gsap.context
+    }  // closes init()
+
+    const handleResize = () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(init, 250)
+    }
+    window.addEventListener('resize', handleResize)
+    init()
+
     return () => {
-      pinTrigger.kill()
-      orbitTween.scrollTrigger?.kill()
-      phase3Trigger.kill()
-      phase3TL.kill()
-      if (isMobile) section.style.height = ''
+      clearTimeout(resizeTimer)
+      window.removeEventListener('resize', handleResize)
+      if (ctx) { ctx.revert(); ctx = null }
+      resetStyles()
     }
   }, [])
 

@@ -40,10 +40,11 @@ function App() {
       ══════════════════════════════════════════════ */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex flex-col items-center pt-2 pointer-events-none">
         <div className="pointer-events-auto flex flex-col items-center gap-1">
-          {!submitted ? (
+          <div className="relative p-2 bg-[#313138]/20 backdrop-blur-[40px] rounded-[12px] [corner-shape:squircle]">
+            {/* Form always in layout — invisible when submitted so container keeps its size */}
             <form
               onSubmit={handleSubmit}
-              className="flex items-center gap-2 p-2 bg-[#313138]/20 backdrop-blur-[40px] rounded-[12px] [corner-shape:squircle]"
+              className={`flex items-center gap-2 ${submitted ? 'invisible pointer-events-none' : ''}`}
             >
               <input
                 type="email"
@@ -66,15 +67,15 @@ function App() {
                 {loading ? 'Joining…' : 'Join the Waitlist'}
               </button>
             </form>
-          ) : (
-            <div className="flex items-center justify-center p-2 bg-[#313138]/20 backdrop-blur-[40px] rounded-[12px] [corner-shape:squircle]">
-              <div className="min-h-[44px] px-3 flex items-center">
-                <span className="text-[#0E0E0E] text-[12px] leading-[16px] font-normal">
+            {/* Success overlay — fills the exact same container */}
+            {submitted && (
+              <div className="absolute inset-0 flex items-center justify-center px-3">
+                <span className="text-[#0E0E0E] text-[12px] leading-[16px] font-normal whitespace-nowrap">
                   You're in. First to walk when we launch.
                 </span>
               </div>
-            </div>
-          )}
+            )}
+          </div>
           {error && (
             <span className="text-[#FF591D] text-[11px] leading-[14px]">{error}</span>
           )}
