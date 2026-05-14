@@ -52,7 +52,7 @@ function App() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email for early access"
-                className="w-[196px] min-h-[44px] px-3 py-2 bg-[#313138]/60 backdrop-blur-[60px] rounded-[8px] [corner-shape:squircle]
+                className="w-[240px] min-h-[44px] px-3 py-2 bg-[#313138]/60 backdrop-blur-[60px] rounded-[8px] [corner-shape:squircle]
                            text-white text-[12px] leading-[16px] font-normal placeholder:text-white/50
                            outline-none"
               />

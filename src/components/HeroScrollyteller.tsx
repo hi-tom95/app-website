@@ -723,7 +723,7 @@ export default function HeroScrollyteller() {
         </div>
 
         {/* Layer 3 — Headline (cross-fades between Phase 2 and Phase 3 copy) */}
-        <div className="absolute inset-0 z-30 flex flex-col items-center text-center pt-[calc(25vh_-_106px)] px-6 pointer-events-none">
+        <div className="absolute inset-0 z-30 flex flex-col items-center text-center pt-[calc(25vh_-_98px)] md:pt-[calc(25vh_-_106px)] px-6 pointer-events-none">
           <div className="relative mb-5">
             <h1
               ref={headline1Ref}
