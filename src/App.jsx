@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { MapPinIcon as MapPin } from '@phosphor-icons/react'
 import HeroScrollyteller from './components/HeroScrollyteller'
 
 /* ─────────────────────────────────────────────────────────
@@ -52,7 +51,7 @@ function App() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email for early access"
-                className="[field-sizing:content] min-w-[120px] min-h-[44px] px-3 py-2 bg-[#313138]/60 backdrop-blur-[60px] rounded-[8px] [corner-shape:squircle]
+                className="w-[196px] min-h-[44px] px-3 py-2 bg-[#313138]/60 backdrop-blur-[60px] rounded-[8px] [corner-shape:squircle]
                            text-white text-[12px] leading-[16px] font-normal placeholder:text-white/50
                            outline-none"
               />
@@ -68,11 +67,12 @@ function App() {
               </button>
             </form>
           ) : (
-            <div className="flex items-center gap-2 px-4 py-2 bg-[#313138]/20 backdrop-blur-[40px] rounded-[12px] [corner-shape:squircle]">
-              <MapPin size={13} color="white" weight="fill" />
-              <span className="text-white text-[12px] leading-[16px]">
-                You're on the list. We'll be in touch.
-              </span>
+            <div className="flex items-center justify-center p-2 bg-[#313138]/20 backdrop-blur-[40px] rounded-[12px] [corner-shape:squircle]">
+              <div className="min-h-[44px] px-3 flex items-center">
+                <span className="text-[#0E0E0E] text-[12px] leading-[16px] font-normal">
+                  You're in. First to walk when we launch.
+                </span>
+              </div>
             </div>
           )}
           {error && (
