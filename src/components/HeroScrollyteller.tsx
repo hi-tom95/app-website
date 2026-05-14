@@ -349,6 +349,15 @@ export default function HeroScrollyteller() {
         start:   () => section.offsetTop + PHASE1_PX,
         end:     () => section.offsetTop + PHASE1_PX + PHASE2_PX + mobilePhase2Extra,
         scrub:   1,
+        onLeaveBack() {
+          // Snap cards hidden immediately — scrub lag would otherwise leave them visible
+          cards.forEach(card => {
+            if (!card) return
+            card.style.opacity   = '0'
+            card.style.transform = ''
+            card.style.height    = ''
+          })
+        },
       },
       onUpdate() {
         const op = orbitState.progress
@@ -719,7 +728,7 @@ export default function HeroScrollyteller() {
             <h1
               ref={headline1Ref}
               className="text-[#0E0E0E] font-medium leading-[1.1] tracking-[-0.04em]
-                         text-[38px] sm:text-[44px] md:text-[48px] max-w-xl"
+                         text-[32px] md:text-[40px] max-w-xl"
             >
               History is playing.
               <br />
@@ -728,14 +737,14 @@ export default function HeroScrollyteller() {
             <h1
               ref={headline2Ref}
               className="absolute top-0 left-0 right-0 text-center text-[#0E0E0E] font-medium leading-[1.1]
-                         tracking-[-0.04em] text-[38px] sm:text-[44px] md:text-[48px] max-w-xl opacity-0"
+                         tracking-[-0.04em] text-[32px] md:text-[40px] max-w-xl opacity-0"
             >
               Walk. Arrive. Listen.
             </h1>
             <h1
               ref={headline3Ref}
               className="absolute top-0 left-0 right-0 text-center text-[#0E0E0E] font-medium leading-[1.1]
-                         tracking-[-0.04em] text-[38px] sm:text-[44px] md:text-[48px] max-w-xl opacity-0"
+                         tracking-[-0.04em] text-[32px] md:text-[40px] max-w-xl opacity-0"
             >
               walkboy
             </h1>
