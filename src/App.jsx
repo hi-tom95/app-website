@@ -6,12 +6,31 @@ import HeroScrollyteller from './components/HeroScrollyteller'
    App
 ───────────────────────────────────────────────────────── */
 function App() {
-  const [email, setEmail] = useState('')
+  const [email, setEmail]       = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (email) setSubmitted(true)
+    setError('')
+    setLoading(true)
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Something went wrong')
+      }
+      setSubmitted(true)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -20,8 +39,8 @@ function App() {
       {/* ══════════════════════════════════════════════
           FIXED NAV — floating frosted-glass pill
       ══════════════════════════════════════════════ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center pt-2 pointer-events-none">
-        <div className="pointer-events-auto">
+      <nav className="fixed top-0 left-0 right-0 z-50 flex flex-col items-center pt-2 pointer-events-none">
+        <div className="pointer-events-auto flex flex-col items-center gap-1">
           {!submitted ? (
             <form
               onSubmit={handleSubmit}
@@ -39,11 +58,13 @@ function App() {
               />
               <button
                 type="submit"
+                disabled={loading}
                 className="min-h-[44px] px-3 py-2 bg-[#0E0E0E] backdrop-blur-[60px] rounded-[8px] [corner-shape:squircle]
                            text-white text-[12px] leading-[16px] font-normal
-                           whitespace-nowrap transition-opacity duration-150 hover:bg-[#313138] active:scale-95"
+                           whitespace-nowrap transition-opacity duration-150 hover:bg-[#313138] active:scale-95
+                           disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Join the Waitlist
+                {loading ? 'Joining…' : 'Join the Waitlist'}
               </button>
             </form>
           ) : (
@@ -53,6 +74,9 @@ function App() {
                 You're on the list. We'll be in touch.
               </span>
             </div>
+          )}
+          {error && (
+            <span className="text-[#FF591D] text-[11px] leading-[14px]">{error}</span>
           )}
         </div>
       </nav>
