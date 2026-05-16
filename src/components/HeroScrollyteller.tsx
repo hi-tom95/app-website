@@ -852,7 +852,7 @@ export default function HeroScrollyteller() {
           style={{ transform: 'translateY(100%)' }}
         >
           <div className="flex items-center gap-3 px-4 py-2 bg-[#313138]/20 backdrop-blur-[40px] rounded-[12px] [corner-shape:squircle]">
-            <span className="text-white text-[12px] leading-[16px]">hi.metelka@gmail.com</span>
+            <a href="mailto:info@walkboy.app" className="text-white text-[12px] leading-[16px] hover:opacity-70 transition-opacity duration-150">info@walkboy.app</a>
             <span className="text-white/30 text-[12px]">·</span>
             <span className="text-white text-[12px] leading-[16px]">© 2026 · Berlin</span>
           </div>
