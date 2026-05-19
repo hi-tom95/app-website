@@ -482,7 +482,9 @@ export default function HeroScrollyteller() {
       p: 1, duration: step1Dur, ease: 'none',
       onUpdate() {
         phase3SlideP = slideState.p
-        const flyEased = 1 - Math.pow(1 - slideState.p, isMobile ? 4 : 3)
+        // On mobile compress transitions into first half of step 1 for snappier feel
+        const rawP     = isMobile ? Math.min(slideState.p * 2, 1) : slideState.p
+        const flyEased = 1 - Math.pow(1 - rawP, 3)
 
         // Phone slides in on desktop only — on mobile it enters later in step 2
         if (!isMobile) {
@@ -494,9 +496,9 @@ export default function HeroScrollyteller() {
           personContainerRef.current.style.transform = `translateY(${Math.round(flyEased * 160)}px)`
         }
 
-        // Headline cross-fade — 2.5× faster sub-progress so it completes at ~40% of step 1
-        const headlineP     = Math.min(slideState.p * 2.5, 1)
-        const headlineEased = 1 - Math.pow(1 - headlineP, isMobile ? 4 : 3)
+        // Headline cross-fade — faster on mobile (completes at 25% of step 1)
+        const headlineP     = Math.min(slideState.p * (isMobile ? 4 : 2.5), 1)
+        const headlineEased = 1 - Math.pow(1 - headlineP, 3)
         if (headline1Ref.current) headline1Ref.current.style.opacity = (1 - headlineEased).toFixed(3)
         if (headline2Ref.current) headline2Ref.current.style.opacity = headlineEased.toFixed(3)
 
@@ -764,14 +766,14 @@ export default function HeroScrollyteller() {
         <div ref={cardLayerRef} className="absolute inset-0 z-[10] pointer-events-none">
 
           {/* Card 1 — top-left */}
-          <div ref={card1Ref} className="absolute w-[240px] bg-[#313138]/60 backdrop-blur-[60px] rounded-[16px] [corner-shape:squircle] opacity-0 overflow-hidden">
+          <div ref={card1Ref} className="absolute w-[256px] md:w-[240px] bg-[#313138]/60 backdrop-blur-[60px] rounded-[16px] [corner-shape:squircle] opacity-0 overflow-hidden">
             {/* Phase 2 content — normal flow, sets card height during orbit */}
             <div ref={card1P2Ref} className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Buildings size={16} color="white" />
                 <p className="text-white text-[14px] font-medium leading-none">Hyperlocal</p>
               </div>
-              <p className="text-white/70 text-[14px] leading-[1.3]">Hyperlocal audio guides — not generic city tours.</p>
+              <p className="text-white/70 text-[14px] leading-[1.3]">Hyperlocal audio guides – not generic city tours.</p>
             </div>
             {/* Phase 3 content — absolute overlay, fades in */}
             <div ref={card1P3Ref} className="absolute top-0 left-0 right-0 p-4 opacity-0">
@@ -779,12 +781,12 @@ export default function HeroScrollyteller() {
                 <MapPin size={16} color="white" weight="fill" />
                 <p className="text-white text-[14px] font-medium leading-none">Your Location, Live</p>
               </div>
-              <p className="text-white/70 text-[14px] leading-[1.3]">Open walkboy. The app senses exactly where you are — down to the building.</p>
+              <p className="text-white/70 text-[14px] leading-[1.3]">Open walkboy. The app senses exactly where you are – down to the building.</p>
             </div>
           </div>
 
           {/* Card 2 — bottom-left */}
-          <div ref={card2Ref} className="absolute w-[240px] bg-[#313138]/60 backdrop-blur-[60px] rounded-[16px] [corner-shape:squircle] opacity-0 overflow-hidden">
+          <div ref={card2Ref} className="absolute w-[256px] md:w-[240px] bg-[#313138]/60 backdrop-blur-[60px] rounded-[16px] [corner-shape:squircle] opacity-0 overflow-hidden">
             {/* Phase 2 content — normal flow, sets card height during orbit */}
             <div ref={card2P2Ref} className="p-4">
               <div className="flex items-center gap-2 mb-2">
@@ -804,14 +806,14 @@ export default function HeroScrollyteller() {
           </div>
 
           {/* Card 3 — top-right */}
-          <div ref={card3Ref} className="absolute w-[240px] bg-[#313138]/60 backdrop-blur-[60px] rounded-[16px] [corner-shape:squircle] opacity-0 overflow-hidden">
+          <div ref={card3Ref} className="absolute w-[256px] md:w-[240px] bg-[#313138]/60 backdrop-blur-[60px] rounded-[16px] [corner-shape:squircle] opacity-0 overflow-hidden">
             {/* Phase 2 content — normal flow, sets card height during orbit */}
             <div ref={card3P2Ref} className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Clock size={16} color="white" />
                 <p className="text-white text-[14px] font-medium leading-none">Contextual Timing</p>
               </div>
-              <p className="text-white/70 text-[14px] leading-[1.3]">Location-aware storytelling, triggered as you walk — zero friction.</p>
+              <p className="text-white/70 text-[14px] leading-[1.3]">Location-aware storytelling, triggered as you walk – zero friction.</p>
             </div>
             {/* Phase 3 content — absolute overlay, fades in */}
             <div ref={card3P3Ref} className="absolute top-0 left-0 right-0 p-4 opacity-0">
@@ -824,14 +826,14 @@ export default function HeroScrollyteller() {
           </div>
 
           {/* Card 4 — bottom-right */}
-          <div ref={card4Ref} className="absolute w-[240px] bg-[#313138]/60 backdrop-blur-[60px] rounded-[16px] [corner-shape:squircle] opacity-0 overflow-hidden">
+          <div ref={card4Ref} className="absolute w-[256px] md:w-[240px] bg-[#313138]/60 backdrop-blur-[60px] rounded-[16px] [corner-shape:squircle] opacity-0 overflow-hidden">
             {/* Phase 2 content — normal flow, sets card height during orbit */}
             <div ref={card4P2Ref} className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkle size={16} color="white" />
                 <p className="text-white text-[14px] font-medium leading-none">Cultural Depth</p>
               </div>
-              <p className="text-white/70 text-[14px] leading-[1.3]">Your mobile tour guide from Weimar Republic cafés to Cold War checkpoints — Berlin, revealed.</p>
+              <p className="text-white/70 text-[14px] leading-[1.3]">Your mobile tour guide from Weimar Republic cafés to Cold War checkpoints – Berlin, revealed.</p>
             </div>
             {/* Phase 3 content — absolute overlay, fades in */}
             <div ref={card4P3Ref} className="absolute top-0 left-0 right-0 p-4 opacity-0">

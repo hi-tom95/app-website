@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 
-const FRAME_COUNT  = 244          // 256 total minus 12 static opening frames
-const FRAME_OFFSET = 12           // start at phone_012.webp — first 12 frames were static
+const FRAME_COUNT  = 179
+const FRAME_OFFSET = 1
 const FRAME_W      = 603
 const FRAME_H      = 1310
 const LERP         = 0.12
